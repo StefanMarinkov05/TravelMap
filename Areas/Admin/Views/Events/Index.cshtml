@@ -1,0 +1,71 @@
+﻿@model IEnumerable<TravelMap.Models.Event>
+
+@{
+    ViewData["Title"] = "Събития";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="fw-bold mb-0">Предстоящи Събития</h1>
+            <p class="text-muted lead">Открийте интересни фестивали и събития по света</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <i class="bi bi-calendar-plus me-2"></i>Ново Събитие
+        </a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-up transition">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 small">
+                                <i class="bi bi-calendar3 me-1"></i> @item.Date.ToString("dd MMMM yyyy")
+                            </span>
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end rounded-3 shadow border-0">
+                                    <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil me-2"></i>Редактирай</a></li>
+                                    <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@item.Id"><i class="bi bi-trash me-2"></i>Изтрий</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h4 class="fw-bold mb-2">@item.Name</h4>
+                        <p class="text-secondary small mb-3 line-clamp">@item.Description</p>
+
+                        <div class="mt-auto pt-3 border-top">
+                            <div class="d-flex align-items-center text-muted small">
+                                <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                                <span class="fw-bold">@item.Destination.Name</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-up:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .transition {
+        transition: all 0.3s ease;
+    }
+
+    .line-clamp {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>

@@ -1,0 +1,284 @@
+﻿@model TravelMap.Models.Destination
+
+@{
+    ViewData["Title"] = "Редактиране на дестинация";
+    var selectedTagIds = ViewBag.SelectedTagIds as List<int> ?? new List<int>();
+}
+
+<div class="container py-5">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="card-header bg-dark py-3 d-flex justify-content-between align-items-center">
+            <h3 class="card-title text-white mb-0 fw-bold">📝 Редактиране: @Model.Name</h3>
+            <a asp-action="Index" class="btn btn-outline-light btn-sm rounded-pill px-3 text-uppercase fw-bold" style="font-size: 0.8rem;">Назад към списъка</a>
+        </div>
+
+        <div class="card-body p-4 p-md-5 bg-light">
+            <form asp-action="Edit" enctype="multipart/form-data" id="editForm">
+                <div asp-validation-summary="All" class="text-danger mb-4 p-3 bg-white rounded-3 shadow-sm" style="display: @(ViewData.ModelState.IsValid ? "none" : "block")"></div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row g-4">
+                    <div class="col-md-7">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Основна информация</h5>
+
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label fw-bold small text-uppercase text-muted">Име на дестинацията</label>
+                                <input asp-for="Name" class="form-control border-2 rounded-3" placeholder="напр. Рилски манастир" />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Region" class="form-label fw-bold small text-uppercase text-muted">Регион / Град</label>
+                                <input asp-for="Region" class="form-control border-2 rounded-3" placeholder="напр. Рила планина" />
+                                <span asp-validation-for="Region" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-0">
+                                <label asp-for="Description" class="form-label fw-bold small text-uppercase text-muted">Описание</label>
+                                <textarea asp-for="Description" class="form-control border-2 rounded-3" rows="8" placeholder="Разкажете за това място..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Класификация</h5>
+
+                            <div class="mb-3">
+                                <label asp-for="CountryId" class="form-label fw-bold small text-uppercase text-muted">Държава</label>
+                                <select asp-for="CountryId" class="form-select border-2 rounded-3 shadow-sm" asp-items="ViewBag.CountryId"></select>
+                            </div>
+
+                            <div class="mb-0">
+                                <label asp-for="CategoryId" class="form-label fw-bold small text-uppercase text-muted">Категория</label>
+                                <select asp-for="CategoryId" class="form-select border-2 rounded-3 shadow-sm" asp-items="ViewBag.CategoryId"></select>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 shadow-sm rounded-4 p-4">
+                            <h5 class="fw-bold mb-3 text-primary">🏷️ Тагове</h5>
+                            <p class="text-muted small mb-3">Изберете всички приложими характеристики:</p>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                @if (ViewData["Tags"] is SelectList tagList)
+                                {
+                                    foreach (var tag in tagList)
+                                    {
+                                        var tagId = int.Parse(tag.Value);
+                                        var isSelected = selectedTagIds.Contains(tagId);
+
+                                        <div class="tag-selector">
+                                            <input type="checkbox" name="selectedTags" value="@tag.Value"
+                                                   id="tag-@tag.Value" class="btn-check"
+                                                   @(isSelected ? "checked" : "")>
+                                            <label class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-1"
+                                                   for="tag-@tag.Value">
+                                                <i class="bi @(isSelected ? "bi-check-circle-fill" : "bi-plus-lg")"></i>
+                                                @tag.Text
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm rounded-4 p-4">
+                            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">📸 Галерия</h5>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small text-uppercase text-muted d-block mb-3">Текущи снимки</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    @foreach (var img in Model.Images)
+                                    {
+                                        <div class="existing-image-container shadow-sm" id="img-container-@img.Id">
+                                            <img src="@img.ImageUrl" class="preview-img">
+                                            <button type="button" class="btn-remove" onclick="toggleDeletion(@img.Id)" title="Премахни снимката">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                    <div id="deleted-images-inputs"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <label class="form-label fw-bold small text-uppercase text-muted d-block mb-3">Добави нови снимки</label>
+                                <div class="upload-zone p-5 border-2 border-dashed rounded-4 text-center bg-light position-relative">
+                                    <input type="file" name="newImages" id="imageInput" class="position-absolute w-100 h-100 opacity-0 top-0 start-0 cursor-pointer" multiple accept="image/*" style="z-index: 5;" />
+                                    <div class="py-2">
+                                        <i class="bi bi-images fs-1 text-primary mb-2 d-block"></i>
+                                        <h6 class="fw-bold">Провлачете снимки или кликнете тук</h6>
+                                        <p class="text-muted small mb-0">Можете да изберете няколко файла едновременно</p>
+                                    </div>
+                                </div>
+                                <div id="imagePreview" class="d-flex flex-wrap gap-3 mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 d-flex gap-3 justify-content-end align-items-center">
+                    <span class="text-muted small me-auto"><i class="bi bi-info-circle me-1"></i> Не забравяйте да запазите промените преди да излезете.</span>
+                    <a asp-action="Index" class="btn btn-light rounded-pill px-4 fw-bold">Отказ</a>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm py-2">
+                        <i class="bi bi-save me-2"></i>Запази дестинацията
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-dashed {
+        border: 2px dashed #dee2e6 !important;
+        transition: all 0.2s ease;
+    }
+
+    .upload-zone:hover {
+        background-color: #f8f9fa !important;
+        border-color: #0d6efd !important;
+    }
+
+    .existing-image-container {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 15px;
+        overflow: visible;
+    }
+
+    .preview-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid white;
+    }
+
+    .btn-remove {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #dc3545;
+        color: white;
+        border: 2px solid white;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease;
+    }
+
+        .btn-remove:hover {
+            transform: scale(1.15);
+            background: #bb2d3b;
+        }
+
+    .image-marked-deleted {
+        filter: grayscale(1) opacity(0.3);
+        transform: scale(0.9);
+    }
+
+        .image-marked-deleted .btn-remove {
+            background: #198754; 
+            transform: rotate(45deg);
+        }
+
+    .btn-check:checked + .btn-outline-primary {
+        background-color: #0d6efd;
+        color: white;
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+    }
+
+        .btn-check:checked + .btn-outline-primary i::before {
+            content: "\f272"; /* bi-check-circle-fill */
+        }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function markForDeletion(id) {
+            const container = document.getElementById('img-container-' + id);
+            const input = document.getElementById('input-' + id);
+
+            if (input.value === "") {
+                input.value = id;
+                container.classList.add('image-marked-deleted');
+            } else {
+                input.value = "";
+                container.classList.remove('image-marked-deleted');
+            }
+        }
+
+        document.getElementById('imageInput').addEventListener('change', function (e) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = ''; 
+
+            if (this.files) {
+                Array.from(this.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const html = `
+                            <div class="position-relative" style="width: 140px; height: 140px;">
+                                <img src="${e.target.result}" class="preview-img" style="border: 2px dashed #0d6efd; opacity: 0.8;">
+                                <span class="position-absolute bottom-0 start-50 translate-middle-x badge rounded-pill bg-primary mb-2 shadow">НОВА</span>
+                            </div>
+                        `;
+                        preview.insertAdjacentHTML('beforeend', html);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+
+        document.querySelectorAll('.btn-check').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const icon = this.nextElementSibling.querySelector('i');
+                if(this.checked) {
+                    icon.classList.replace('bi-plus-lg', 'bi-check-circle-fill');
+                } else {
+                    icon.classList.replace('bi-check-circle-fill', 'bi-plus-lg');
+                }
+            });
+        });
+
+        function toggleDeletion(id) {
+            const container = document.getElementById('img-container-' + id);
+            const hiddenInputsContainer = document.getElementById('deleted-images-inputs');
+            let existingInput = document.querySelector(`input[name="deletedImageIds"][value="${id}"]`);
+
+            if (!existingInput) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'deletedImageIds';
+                input.value = id;
+                hiddenInputsContainer.appendChild(input);
+
+                container.classList.add('image-marked-deleted');
+            } else {
+                existingInput.remove();
+                container.classList.remove('image-marked-deleted');
+            }
+        }
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<TravelMap.Models.Catalog>
+@{
+    ViewData["Title"] = "Моите Колекции";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="display-4 fw-bold text-dark mb-0">Моите Колекции</h1>
+            <p class="text-secondary lead mb-0">Лични списъци и планове за пътуване</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
+            <i class="bi bi-folder-plus me-2"></i>Нов каталог
+        </a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <div class="card h-100 border-0 shadow-sm rounded-4 folder-card bg-white position-relative overflow-hidden">
+                    <div class="folder-tab"></div>
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div class="folder-icon-bg"><i class="bi bi-folder2-open text-primary fs-4"></i></div>
+                            <span class="badge @(item.IsPublic ? "bg-success" : "bg-secondary") rounded-pill align-self-start">
+                                @(item.IsPublic ? "Публичен" : "Личен")
+                            </span>
+                        </div>
+                        <h4 class="fw-bold mb-1">@item.Name</h4>
+                        <p class="text-muted small mb-3">@item.CatalogDestinations.Count дестинации</p>
+                        <p class="text-secondary small line-clamp-2 mb-4 flex-grow-1">@item.Notes</p>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-dark rounded-pill flex-grow-1">Разгледай</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="bi bi-pencil"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .folder-card {
+        border-top: 4px solid #0d6efd !important;
+        transition: 0.3s;
+    }
+
+        .folder-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+    .folder-tab {
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        width: 50px;
+        height: 12px;
+        background: #0d6efd;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .folder-icon-bg {
+        width: 45px;
+        height: 45px;
+        background: #f0f7ff;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.5rem;
+    }
+</style>

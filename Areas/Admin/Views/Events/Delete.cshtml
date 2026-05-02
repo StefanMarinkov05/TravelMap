@@ -1,0 +1,30 @@
+﻿@model TravelMap.Models.Event
+
+@{
+    ViewData["Title"] = "Изтриване на събитие";
+}
+
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card p-5 border-0 shadow-lg rounded-5">
+                <div class="text-danger mb-4"><i class="bi bi-calendar-x display-1"></i></div>
+                <h2 class="fw-bold">Изтриване на събитие</h2>
+                <p class="text-secondary mb-4">Сигурни ли сте, че искате да премахнете <strong>"@Model.Name"</strong>?</p>
+
+                <div class="bg-light p-4 rounded-4 mb-4 text-start">
+                    <div class="mb-2"><small class="text-muted fw-bold">ЛОКАЦИЯ:</small> <br> @Model.Destination.Name</div>
+                    <div><small class="text-muted fw-bold">ДАТА:</small> <br> @Model.Date.ToString("D")</div>
+                </div>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill fw-bold py-2">Да, изтрий го</button>
+                        <a asp-action="Index" class="btn btn-light rounded-pill py-2">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

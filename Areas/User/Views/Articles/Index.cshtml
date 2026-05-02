@@ -1,0 +1,60 @@
+﻿@model IEnumerable<TravelMap.Models.Article>
+
+@{
+    ViewData["Title"] = "Блог";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Пътеписи и Блог</h1>
+        <p class="lead text-muted">Открий интересни истории за любимите си дестинации</p>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all" style="border-radius: 15px; overflow: hidden;">
+                    <div style="height: 200px; overflow: hidden; position: relative;">
+                        @if (item.Destination?.Images != null && item.Destination.Images.Any())
+                        {
+                            <img src="@Url.Content(item.Destination?.Images?.FirstOrDefault()?.ImageUrl ?? " ~ /images/destinations/default.jpg")" class="card-img-top w-100 h-100" style="object-fit: cover;" alt="@item.Title">
+                        }
+                        else
+                        {
+                            <img src="/images/default.jpg" class="card-img-top w-100 h-100" style="object-fit: cover;" alt="Липсва изображение">
+                        }
+                        <span class="badge bg-primary position-absolute bottom-0 end-0 m-3 shadow">@item.Destination?.Name, @item.Destination?.Country?.Name</span>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold">@item.Title</h5>
+                        <p class="card-text text-muted" style="font-size: 0.9rem;">
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                @(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)
+                            }
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 p-4 pt-0">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary w-100 btn-auth fw-bold">
+                            Прочети повече
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+</style>

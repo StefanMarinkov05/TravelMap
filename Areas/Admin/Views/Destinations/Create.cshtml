@@ -1,0 +1,214 @@
+﻿@model TravelMap.Models.Destination
+
+@{
+    ViewData["Title"] = "Създаване на дестинация";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary py-3">
+                    <h3 class="card-title text-white mb-0 fw-bold">
+                        <i class="bi bi-plus-circle-fill me-2"></i>Нова дестинация
+                    </h3>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create" enctype="multipart/form-data" id="destinationForm" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <div class="row g-4">
+                            <div class="col-md-7">
+                                <div class="mb-3">
+                                    <label asp-for="Name" class="form-label fw-bold small text-uppercase text-muted">Име</label>
+                                    <input asp-for="Name" class="form-control border-2 rounded-3" placeholder="Име на мястото" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Region" class="form-label fw-bold small text-uppercase text-muted">Регион / Област</label>
+                                    <input asp-for="Region" class="form-control border-2 rounded-3" placeholder="Пример: Родопи" />
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="form-label fw-bold small text-uppercase text-muted">Описание</label>
+                                    <textarea asp-for="Description" class="form-control border-2 rounded-3" rows="6" placeholder="Разкажете за дестинацията..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="mb-4">
+                                    <label asp-for="CountryId" class="form-label fw-bold small text-uppercase text-muted">Държава</label>
+                                    <div class="input-group shadow-sm">
+                                        <select asp-for="CountryId" class="form-select border-2" asp-items="ViewBag.CountryId">
+                                            <option value="">-- Избери държава --</option>
+                                        </select>
+                                        <a asp-controller="Countries" asp-action="Create" class="btn btn-outline-primary border-2" title="Добави нова държава"><i class="bi bi-plus-lg"></i></a>
+                                    </div>
+                                    <span asp-validation-for="CountryId" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label asp-for="CategoryId" class="form-label fw-bold small text-uppercase text-muted">Категория</label>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-white border-2 border-end-0 rounded-start-3">
+                                            <i class="bi bi-grid text-primary"></i>
+                                        </span>
+                                        <select asp-for="CategoryId" class="form-select border-2 rounded-end-0"
+                                                asp-items="@(ViewData["CategoryId"] as SelectList)">
+                                            <option value="">-- Избери категория --</option>
+                                        </select>
+                                        <a asp-controller="Categories" asp-action="Create" class="btn btn-outline-primary border-2 rounded-end-3" title="Добави нова категория">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </a>
+                                    </div>
+                                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-uppercase text-muted">Тагове (Multi-select)</label>
+                                    <div class="input-group shadow-sm">
+                                        <select name="selectedTags" class="form-select border-2" multiple asp-items="ViewBag.Tags" style="height: 120px;"></select>
+                                        <a asp-controller="Tags" asp-action="Create" class="btn btn-outline-primary border-2 d-flex align-items-center" title="Добави нов таг"><i class="bi bi-plus-lg"></i></a>
+                                    </div>
+                                    <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Задръжте Ctrl за избор на няколко.</small>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <hr class="my-4 opacity-25">
+                                <label class="form-label fw-bold small text-uppercase text-muted"><i class="bi bi-camera-fill me-2"></i>Снимки на дестинацията</label>
+
+                                <div class="upload-zone p-5 border-2 border-dashed rounded-4 text-center bg-light position-relative" id="dropZone">
+                                    <input type="file" name="images" id="imageInput" class="position-absolute w-100 h-100 opacity-0 top-0 start-0 cursor-pointer" multiple accept="image/*" style="z-index: 5;" />
+                                    <div class="py-2">
+                                        <i class="bi bi-cloud-arrow-up fs-1 text-primary opacity-50"></i>
+                                        <h5 class="mt-2">Избери или пусни снимки тук</h5>
+                                        <p class="text-muted small mb-0">Можете да качите няколко снимки наведнъж</p>
+                                    </div>
+                                </div>
+
+                                <div id="imagePreview" class="d-flex flex-wrap gap-3 mt-4"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 d-flex gap-3 justify-content-end border-top pt-4">
+                            <a asp-action="Index" class="btn btn-light rounded-pill px-4 border">Отказ</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">
+                                <i class="bi bi-check2-circle me-1"></i>Запази дестинация
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-dashed {
+        border: 2px dashed #cbd5e0 !important;
+    }
+
+    .preview-container {
+        position: relative;
+        width: 130px;
+        height: 130px;
+        transition: transform 0.2s;
+    }
+
+        .preview-container:hover {
+            transform: scale(1.05);
+        }
+
+    .preview-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 3px solid white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-remove {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ef4444;
+        color: white;
+        border: 2px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+        font-size: 16px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+        .btn-remove:hover {
+            background: #dc2626;
+            scale: 1.1;
+        }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        let selectedFiles = [];
+        const imageInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('imagePreview');
+
+        imageInput.addEventListener('change', function (e) {
+            const files = Array.from(e.target.files);
+
+            files.forEach(file => {
+                if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                    selectedFiles.push(file);
+                }
+            });
+
+            updatePreview();
+            syncInput();
+        });
+
+        function updatePreview() {
+            previewContainer.innerHTML = ''; 
+
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-container animate__animated animate__fadeIn';
+                    div.innerHTML = `
+                        <div class="btn-remove" onclick="removeImage(${index})" title="Премахни снимката">
+                            <i class="bi bi-x"></i>
+                        </div>
+                        <img src="${e.target.result}" class="preview-img">
+                    `;
+                    previewContainer.appendChild(div);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeImage(index) {
+            selectedFiles.splice(index, 1); 
+            updatePreview(); 
+            syncInput(); 
+        }
+
+        function syncInput() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            imageInput.files = dataTransfer.files;
+        }
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,158 @@
+﻿@model TravelMap.Models.DestinationSpecifications
+
+@{
+    ViewData["Title"] = "Управление на спецификации";
+}
+
+<div class="container py-5">
+    <div class="mb-5">
+        <h1 class="fw-bold mb-0 text-dark">Управление на спецификации</h1>
+        <p class="text-muted">Конфигуриране на глобалните параметри за дестинациите</p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+                <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-primary">
+                        <i class="bi bi-globe-europe-africa me-2"></i>Държави
+                    </h5>
+                    <a class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm"
+                       asp-area="Admin" asp-controller="Countries" asp-action="Create">
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <tbody class="border-top-0">
+                                @foreach (var country in Model.Countries)
+                                {
+                                    <tr>
+                                        <td class="ps-4 fw-medium text-dark">@country.Name</td>
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group">
+                                                <a class="btn btn-outline-warning btn-sm border-0 rounded-circle"
+                                                   asp-area="Admin" asp-controller="Countries" asp-action="Edit" asp-route-id="@country.Id" title="Редакция">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                                <a class="btn btn-outline-danger btn-sm border-0 rounded-circle ms-1"
+                                                   asp-area="Admin" asp-controller="Countries" asp-action="Delete" asp-route-id="@country.Id" title="Изтриване">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+                <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-success">
+                        <i class="bi bi-collection-fill me-2"></i>Категории
+                    </h5>
+                    <a class="btn btn-success btn-sm rounded-pill px-3 shadow-sm"
+                       asp-area="Admin" asp-controller="Categories" asp-action="Create">
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <tbody class="border-top-0">
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <tr>
+                                        <td class="ps-4 fw-medium text-dark">@category.Name</td>
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group">
+                                                <a class="btn btn-outline-warning btn-sm border-0 rounded-circle"
+                                                   asp-area="Admin" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id" title="Редакция">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                                <a class="btn btn-outline-danger btn-sm border-0 rounded-circle ms-1"
+                                                   asp-area="Admin" asp-controller="Categories" asp-action="Delete" asp-route-id="@category.Id" title="Изтриване">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12">
+            <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+                <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-info text-dark">
+                        <i class="bi bi-tags-fill me-2"></i>Ключови думи
+                    </h5>
+                    <a class="btn btn-info btn-sm rounded-pill px-3 shadow-sm text-white"
+                       style="background-color: #0dcaf0;"
+                       asp-area="Admin" asp-controller="Tags" asp-action="Create">
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <tbody class="border-top-0">
+                                @foreach (var tag in Model.Tags)
+                                {
+                                    <tr>
+                                        <td class="ps-4 fw-medium text-dark">
+                                            <span class="badge bg-light text-secondary border rounded-pill"># @tag.Name</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <div class="btn-group">
+                                                <a class="btn btn-outline-warning btn-sm border-0 rounded-circle"
+                                                   asp-area="Admin" asp-controller="Tags" asp-action="Edit" asp-route-id="@tag.Id" title="Редакция">
+                                                    <i class="bi bi-pencil-fill"></i>
+                                                </a>
+                                                <a class="btn btn-outline-danger btn-sm border-0 rounded-circle ms-1"
+                                                   asp-area="Admin" asp-controller="Tags" asp-action="Delete" asp-route-id="@tag.Id" title="Изтриване">
+                                                    <i class="bi bi-trash3-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+        }
+
+    .table td {
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .btn-group .btn:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+</style>

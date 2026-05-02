@@ -1,0 +1,71 @@
+﻿@model IEnumerable<TravelMap.Models.Article>
+
+@{
+    ViewData["Title"] = "Статии";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="fw-bold mb-0">Пътеписи и Статии</h1>
+            <p class="text-muted lead">Споделете вашите истории от целия свят</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <i class="bi bi-pencil-fill me-2"></i>Нова Статия
+        </a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-shadow transition">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="mb-3">
+                            <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3">
+                                <i class="bi bi-geo-alt-fill me-1"></i> @item.Destination.Name
+                            </span>
+                        </div>
+
+                        <h4 class="fw-bold mb-3 text-dark">@item.Title</h4>
+                        <p class="text-secondary small flex-grow-1">
+                            @if (item.Description?.Length > 120)
+                            {
+                                @(item.Description.Substring(0, 120) + "...")
+                            }
+                            else
+                            {
+                                @item.Description
+                            }
+                        </p>
+
+                        <div class="mt-4 d-flex justify-content-between align-items-center">
+                            <a asp-area="User" asp-controller="Articles" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                Прочети повече
+                            </a>
+                            <div class="btn-group">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light rounded-circle text-warning me-1">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light rounded-circle text-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.1) !important;
+    }
+
+    .transition {
+        transition: all 0.3s ease;
+    }
+</style>

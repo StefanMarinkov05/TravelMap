@@ -1,0 +1,80 @@
+﻿@using TravelMap.Models
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<ApplicationUser>
+@inject UserManager<ApplicationUser> userManager;
+
+@{
+    ViewData["Title"] = "Потребители";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="fw-bold mb-0">Управление на потребители</h1>
+            <p class="text-muted">Администриране на достъпа и профилите в системата</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <i class="bi bi-person-plus-fill me-2"></i>Нов Потребител
+        </a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var user in Model)
+        {
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative hover-up transition">
+                    @if (user.Id == userManager.GetUserId(User))
+                    {
+                        <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-success">Ти</span>
+                    }
+
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3">
+                                <i class="bi bi-person-badge fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-0">@user.FirstName @user.LastName</h5>
+                                <small class="text-muted">@user.Email</small>
+                            </div>
+                        </div>
+
+                        <div class="bg-light rounded-3 p-3 mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small text-muted">Телефон:</span>
+                                <span class="small fw-bold">@(user.PhoneNumber ?? "Няма")</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="small text-muted">Каталози:</span>
+                                <span class="small fw-bold">@user.Catalogs.Count</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-outline-warning btn-sm rounded-pill flex-grow-1">
+                                <i class="bi bi-pencil me-1"></i> Редакция
+                            </a>
+                            @if (user.Id != userManager.GetUserId(User))
+                            {
+                                <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-up:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+    }
+
+    .transition {
+        transition: all 0.3s ease;
+    }
+</style>

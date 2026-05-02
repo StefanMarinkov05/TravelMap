@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Начало";
+}
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light shadow-sm"
+     style="border-radius: 30px; background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center;">
+    <div class="col-md-6 p-lg-5 mx-auto my-5 glass-card p-4 rounded-4">
+        <h1 class="display-4 fw-bold text-white mb-3">Твоето следващо приключение започва тук</h1>
+        <p class="lead text-white-50 mb-4">Открий скрити кътчета, планирай своите пътувания и споделяй моменти от целия свят.</p>
+        <a class="btn btn-primary btn-auth px-5 py-3 fw-bold shadow" asp-area="User" asp-controller="Destinations" asp-action="Index">
+            Разгледай дестинации
+        </a>
+    </div>
+</div>
+
+<div class="container my-5 py-5">
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-primary bg-gradient text-white fs-2 mb-3 rounded-circle" style="width: 80px; height: 80px;">
+                <i class="bi bi-compass"></i>
+            </div>
+            <h3 class="fs-2 fw-bold text-dark">Изследвай</h3>
+            <p class="text-secondary">Намери уникални места, които не са в стандартните туристически гидове.</p>
+        </div>
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-success bg-gradient text-white fs-2 mb-3 rounded-circle" style="width: 80px; height: 80px;">
+                <i class="bi bi-journal-album"></i>
+            </div>
+            <h3 class="fs-2 fw-bold text-dark">Организирай</h3>
+            <p class="text-secondary">Създай лични каталози и списъци с дестинации, които искаш да посетиш.</p>
+        </div>
+        <div class="feature col text-center">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-info bg-gradient text-white fs-2 mb-3 rounded-circle" style="width: 80px; height: 80px;">
+                <i class="bi bi-people"></i>
+            </div>
+            <h3 class="fs-2 fw-bold text-dark">Споделяй</h3>
+            <p class="text-secondary">Публикувай своите пътеписи и помогни на други пътешественици с опит.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>

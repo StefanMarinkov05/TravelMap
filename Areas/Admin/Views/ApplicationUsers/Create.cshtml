@@ -1,0 +1,59 @@
+﻿@model ApplicationUser
+
+@{
+    ViewData["Title"] = "Нов Потребител";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-4 p-4 p-lg-5">
+                <div class="text-center mb-4">
+                    <div class="bg-success bg-opacity-10 text-success d-inline-block p-3 rounded-circle mb-3">
+                        <i class="bi bi-person-plus fs-1"></i>
+                    </div>
+                    <h2 class="fw-bold">Добави потребител</h2>
+                </div>
+
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="form-label fw-bold small"></label>
+                            <input asp-for="FirstName" class="form-control rounded-pill px-3" placeholder="Име" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LastName" class="form-label fw-bold small"></label>
+                            <input asp-for="LastName" class="form-control rounded-pill px-3" placeholder="Фамилия" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="form-label fw-bold small"></label>
+                        <input asp-for="Email" class="form-control rounded-pill px-3" placeholder="email@example.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="PhoneNumber" class="form-label fw-bold small"></label>
+                        <input asp-for="PhoneNumber" class="form-control rounded-pill px-3" placeholder="+359..." />
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label fw-bold small">Парола</label>
+                        <input type="password" name="password" class="form-control rounded-pill px-3" required />
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success rounded-pill py-2 fw-bold">Създай профил</button>
+                        <a asp-action="Index" class="btn btn-light rounded-pill py-2">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

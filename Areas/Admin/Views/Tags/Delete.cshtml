@@ -1,0 +1,35 @@
+﻿@model TravelMap.Models.Tag
+
+@{
+    ViewData["Title"] = "Изтриване на таг";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center text-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 rounded-5 p-5">
+                <div class="text-danger mb-4">
+                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-4">
+                        <i class="bi bi-trash3 display-4"></i>
+                    </div>
+                </div>
+
+                <h2 class="fw-bold mb-2">Изтриване?</h2>
+                <p class="text-secondary mb-4">Сигурни ли сте, че искате да изтриете тага <br><strong>"@Model.Name"</strong>?</p>
+
+                <div class="bg-light p-3 rounded-4 mb-4 border border-danger border-opacity-10">
+                    <span class="text-muted small text-uppercase fw-bold">Име на тага:</span>
+                    <h4 class="mb-0 fw-bold">@Model.Name</h4>
+                </div>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill py-2 fw-bold">Да, изтрий го</button>
+                        <a asp-controller="DestinationSpecifications" asp-action="Index" class="btn btn-light rounded-pill py-2">Не, върни ме</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

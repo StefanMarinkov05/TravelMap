@@ -1,0 +1,21 @@
+﻿@model TravelMap.Models.Country
+
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card p-5 border-0 shadow-lg rounded-5">
+                <div class="text-danger mb-4"><i class="bi bi-exclamation-triangle-fill display-1"></i></div>
+                <h2 class="fw-bold">Изтриване</h2>
+                <p class="text-secondary mb-4">Сигурни ли сте, че искате да изтриете <strong>"@Model.Name"</strong>?</p>
+                
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill fw-bold py-2">Потвърждавам изтриването</button>
+                        <a asp-controller="DestinationSpecifications" asp-action="Index" class="btn btn-light rounded-pill py-2">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

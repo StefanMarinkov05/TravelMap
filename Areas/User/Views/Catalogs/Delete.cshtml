@@ -1,0 +1,40 @@
+﻿@model TravelMap.Models.Catalog
+
+@{
+    ViewData["Title"] = "Изтриване";
+}
+
+<div class="container py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-5 border-0 shadow-lg rounded-5">
+                <div class="text-danger mb-4">
+                    <i class="bi bi-trash3 display-1"></i>
+                </div>
+                <h1 class="fw-bold">Изтриване</h1>
+                <h3 class="text-secondary mb-4">Сигурни ли сте, че искате да изтриете този каталог?</h3>
+
+                <div class="text-start bg-light p-4 rounded-4 mb-4">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted small fw-bold">ИМЕ</dt>
+                        <dd class="col-sm-8 fw-bold">@Model.Name</dd>
+
+                        <dt class="col-sm-4 text-muted small fw-bold">БЕЛЕЖКИ</dt>
+                        <dd class="col-sm-8 text-secondary">@Model.Notes</dd>
+
+                        <dt class="col-sm-4 text-muted small fw-bold">СТАТУС</dt>
+                        <dd class="col-sm-8">@(Model.IsPublic ? "Публичен" : "Личен")</dd>
+                    </dl>
+                </div>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold">Да, изтрий го</button>
+                        <a asp-action="Index" class="btn btn-light rounded-pill px-4">Отказ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

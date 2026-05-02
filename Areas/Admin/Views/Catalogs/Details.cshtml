@@ -1,0 +1,110 @@
+﻿@model TravelMap.Models.Catalog
+
+@{
+    ViewData["Title"] = "Детайли";
+}
+
+<div class="container py-5">
+    <div class="bg-white p-5 rounded-5 shadow-sm border mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="fw-bold mb-0">Детайли за каталог</h1>
+            <div>
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm">Изтрий</a>
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm">Редактирай</a>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 ms-2">Всички каталози</a>
+            </div>
+        </div>
+        <hr />
+
+        <dl class="row mb-0 mt-4">
+            <dt class="col-sm-3 text-uppercase small fw-bold text-muted">Собственик</dt>
+            <dd class="col-sm-9 fw-bold">@Model.ApplicationUser?.FirstName @Model.ApplicationUser?.LastName</dd>
+
+            <dt class="col-sm-3 text-uppercase small fw-bold text-muted">Име</dt>
+            <dd class="col-sm-9 fw-bold fs-4">@Model.Name</dd>
+
+            <dt class="col-sm-3 text-uppercase small fw-bold text-muted">Статус</dt>
+            <dd class="col-sm-9">
+                <span class="badge @(Model.IsPublic ? "bg-success" : "bg-secondary") rounded-pill">
+                    @(Model.IsPublic ? "Публичен" : "Личен")
+                </span>
+            </dd>
+
+            <dt class="col-sm-3 text-uppercase small fw-bold text-muted">Бележки</dt>
+            <dd class="col-sm-9 text-secondary lead">@Model.Notes</dd>
+        </dl>
+    </div>
+
+    <h3 class="fw-bold mb-4 mt-5"><i class="bi bi-geo-alt-fill me-2 text-primary"></i>Дестинации в този каталог (@(Model.CatalogDestinations?.Count ?? 0))</h3>
+
+    <div class="row g-4">
+        @if (Model.CatalogDestinations != null && Model.CatalogDestinations.Any())
+        {
+            var sortedDestinations = Model.CatalogDestinations.OrderBy(cd => cd.DisplayOrder).ToList();
+
+            @foreach (var cd in sortedDestinations)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="d-flex align-items-center p-3 bg-white border rounded-4 shadow-sm h-100">
+
+                        <div class="d-flex flex-column me-2 gap-1">
+                            <form asp-action="ReorderDestination" method="post">
+                                <input type="hidden" name="catalogId" value="@Model.Id" />
+                                <input type="hidden" name="destinationId" value="@cd.DestinationId" />
+                                <input type="hidden" name="direction" value="up" />
+                                <button type="submit" class="btn btn-sm btn-light p-0 border shadow-xs @(cd == sortedDestinations.First() ? "disabled" : "")" style="width: 24px; height: 24px;">
+                                    <i class="bi bi-chevron-up" style="font-size: 0.7rem;"></i>
+                                </button>
+                            </form>
+                            <form asp-action="ReorderDestination" method="post">
+                                <input type="hidden" name="catalogId" value="@Model.Id" />
+                                <input type="hidden" name="destinationId" value="@cd.DestinationId" />
+                                <input type="hidden" name="direction" value="down" />
+                                <button type="submit" class="btn btn-sm btn-light p-0 border shadow-xs @(cd == sortedDestinations.Last() ? "disabled" : "")" style="width: 24px; height: 24px;">
+                                    <i class="bi bi-chevron-down" style="font-size: 0.7rem;"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        @{
+                            var firstImg = cd.Destination.Images?.FirstOrDefault()?.ImageUrl ?? "/images/destinations/default.jpg";
+                        }
+                        <img src="@firstImg" class="rounded-3 object-fit-cover shadow-sm" style="width: 60px; height: 60px;" alt="">
+
+                        <div class="ms-3 flex-grow-1">
+                            <h6 class="mb-0 fw-bold">@cd.Destination.Name</h6>
+                            <p class="mb-0 text-muted small">@cd.Destination.Region</p>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <a asp-area="Admin" asp-controller="Destinations" asp-action="Details" asp-route-id="@cd.DestinationId"
+                               class="btn btn-outline-primary btn-sm rounded-circle p-1 me-1" title="Виж">
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                            <form asp-action="RemoveDestination" method="post">
+                                <input type="hidden" name="catalogId" value="@Model.Id" />
+                                <input type="hidden" name="destinationId" value="@cd.DestinationId" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle p-1" title="Премахни">
+                                    <i class="bi bi-dash-lg"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5 bg-light rounded-4 border-dashed">
+                <p class="text-muted mb-0">Каталогът е празен.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .border-dashed {
+        border: 2px dashed #dee2e6;
+    }
+</style>

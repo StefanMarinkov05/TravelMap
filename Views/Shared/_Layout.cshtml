@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TravelMap</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <style>
+        .navbar {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .nav-link {
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover { color: #007bff !important; }
+        .dropdown-menu { border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px; }
+        .btn-auth { border-radius: 20px; padding: 0.5rem 1.5rem; transition: transform 0.2s; }
+        .btn-auth:hover { transform: scale(1.05); }
+        .navbar-brand { font-weight: 800; letter-spacing: 1px; color: #333; }
+        .admin-section { background-color: #f8f9fa; border-radius: 8px; }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light sticky-top border-bottom mb-4">
+            <div class="container">
+                <a class="navbar-brand text-primary" asp-area="User" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-map-fill me-2"></i>TravelMap
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="User" asp-controller="Home" asp-action="Index">Начало</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="User" asp-controller="Destinations" asp-action="Index">Дестинации</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Навигация
+                            </a>
+                            <ul class="dropdown-menu shadow-sm">
+                                <li><a class="dropdown-item" asp-area="User" asp-controller="Articles" asp-action="Index"><i class="bi bi-journal-text me-2"></i>Блог</a></li>
+                                <li><a class="dropdown-item" asp-area="User" asp-controller="Home" asp-action="Tips"><i class="bi bi-lightbulb me-2"></i>Съвети</a></li>
+                                <li><a class="dropdown-item" asp-area="User" asp-controller="Events" asp-action="Index"><i class="bi bi-calendar-event me-2"></i>Събития</a></li>
+                                <li><a class="dropdown-item" asp-area="User" asp-controller="Catalogs" asp-action="Public"><i class="bi bi-globe me-2"></i>Публични Каталози</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    @if (User.Identity?.IsAuthenticated == true)
+                                    {
+                                        <a class="dropdown-item fw-bold text-primary" asp-area="User" asp-controller="Catalogs" asp-action="Index">
+                                            <i class="bi bi-globe me-2"></i>Моите каталози
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="dropdown-item text-muted" asp-area="Identity" asp-page="/Account/Login">
+                                            <i class="bi bi-lock me-2"></i>Моите каталози (Впиши се)
+                                        </a>
+                                    }
+                                </li>
+                            </ul>
+                        </li>
+
+                        @if (User.IsInRole(TravelMapContext.ADMIN))
+                        {
+                            <li class="nav-item dropdown admin-section mx-lg-2">
+                                <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-shield-lock me-1"></i>Админски панел
+                                </a>
+                                <ul class="dropdown-menu border-danger">
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="ApplicationUsers" asp-action="Index">Потребители</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Events" asp-action="Index">Събития</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Articles" asp-action="Index">Статии</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Destinations" asp-action="Index">Дестинации</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="DestinationSpecifications" asp-action="Index">Характеристики</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Catalogs" asp-action="Index">Каталози</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="d-flex align-items-center">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @using Microsoft.AspNetCore.Identity
+                            @inject UserManager<ApplicationUser> UserManager
+                            var user = await UserManager.GetUserAsync(User);
+                            var name = user?.FirstName ?? "Потребител";
+                            
+                            <span class="navbar-text me-3">
+                                Здравей, <span class="fw-bold text-dark">@name</span>!
+                            </span>
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="btn btn-outline-danger btn-auth btn-sm">Излизане</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="btn btn-link text-dark text-decoration-none me-2" asp-area="Identity" asp-page="/Account/Login">Вход</a>
+                            <a class="btn btn-primary btn-auth shadow-sm" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-5">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

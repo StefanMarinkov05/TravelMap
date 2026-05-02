@@ -1,0 +1,54 @@
+﻿@model TravelMap.Models.Destination
+
+@{
+    ViewData["Title"] = "Изтриване";
+    var firstImage = Url.Content(Model.Images?.FirstOrDefault()?.ImageUrl ?? "~/images/destinations/default.jpg");
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-danger p-4 text-center text-white">
+                    <i class="bi bi-exclamation-triangle-fill display-4 mb-2"></i>
+                    <h3 class="fw-bold mb-0">Потвърдете изтриването</h3>
+                </div>
+
+                @if (!string.IsNullOrEmpty(firstImage))
+                {
+                    <div style="height: 200px; overflow: hidden; position: relative;">
+                        <img src="@firstImage" class="w-100 grayscale" style="object-fit: cover; filter: grayscale(80%) opacity(0.6);" alt="Delete preview">
+                        <div class="position-absolute top-50 start-50 translate-middle w-100 text-center text-white">
+                            <h4 class="fw-bold shadow-sm">@Model.Name</h4>
+                        </div>
+                    </div>
+                }
+
+                <div class="card-body p-4 p-lg-5 text-center">
+                    <p class="lead text-muted mb-4">Сигурни ли сте, че искате да премахнете тази дестинация за постоянно? Това действие е необратимо.</p>
+
+                    <div class="alert alert-light border rounded-3 mb-4 text-start">
+                        <div class="row">
+                            <div class="col-sm-4 fw-bold">Държава:</div>
+                            <div class="col-sm-8 text-secondary">@Model.Country?.Name</div>
+                            <div class="col-sm-4 fw-bold">Изображения:</div>
+                            <div class="col-sm-8 text-secondary">@Model.Images?.Count броя</div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm">
+                                <i class="bi bi-trash3 me-2"></i>Да, изтрий дестинацията
+                            </button>
+                            <a asp-action="Index" class="btn btn-light rounded-pill">
+                                Отказ и връщане
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

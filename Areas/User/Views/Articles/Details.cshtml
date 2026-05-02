@@ -1,0 +1,58 @@
+﻿@model TravelMap.Models.Article
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<article class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <div class="position-relative shadow-lg" style="border-radius: 20px; overflow: hidden; height: 450px;">
+                @if (Model.Destination?.Images != null && Model.Destination.Images.Any())
+                {
+                    <img src="@Url.Content(Model.Destination?.Images?.FirstOrDefault()?.ImageUrl ?? " ~ /images/destinations/default.jpg")" class="w-100 h-100" style="object-fit: cover;" alt="@Model.Title">
+                }
+                else
+                {
+                    <img src="/images/default.jpg" class="card-img-top w-100 h-100" style="object-fit: cover;" alt="Липсва изображение">
+                }
+
+                <div class="position-absolute bottom-0 start-0 w-100 p-4 p-md-5 text-white"
+                     style="background: linear-gradient(transparent, rgba(0,0,0,0.8));">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-2">
+                            <li class="breadcrumb-item"><a asp-action="Index" class="text-white-50">Блог</a></li>
+                            <li class="breadcrumb-item active text-white" aria-current="page">@Model.Destination?.Name, @Model.Destination?.Country?.Name</li>
+                        </ol>
+                    </nav>
+                    <h1 class="display-3 fw-bold">@Model.Title</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <p class="lead fw-bold text-primary mb-4 italic">"@Model.Description"</p>
+            }
+
+            <div class="content text-dark lh-lg" style="font-size: 1.1rem; white-space: pre-line;">
+                @Model.Content
+            </div>
+
+            <hr class="my-5" />
+
+            <div class="d-flex justify-content-between align-items-center bg-light p-4 rounded-4 shadow-sm">
+                <div>
+                    <h6 class="text-muted mb-1">Свързана дестинация</h6>
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-geo-alt-fill text-danger"></i> @Model.Destination?.Name</h4>
+                </div>
+                <a asp-action="Index" class="btn btn-secondary btn-auth">
+                    <i class="bi bi-arrow-left me-2"></i>Към всички статии
+                </a>
+            </div>
+        </div>
+    </div>
+</article>

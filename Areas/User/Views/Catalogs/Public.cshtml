@@ -1,0 +1,92 @@
+﻿@model IEnumerable<TravelMap.Models.Catalog>
+
+@{
+    ViewData["Title"] = "Публични каталози";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="display-4 fw-bold text-dark mb-0">Публични каталози</h1>
+            <p class="text-secondary lead mb-0">Разгледайте каталозите на другите потребители</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model.OrderByDescending(c => c.Id))
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <div class="card h-100 border-0 shadow-sm rounded-4 folder-card bg-white position-relative">
+                    <div class="folder-tab"></div>
+
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="folder-icon-wrapper">
+                                <i class="bi bi-folder2-open text-primary display-6"></i>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">
+                                @item.CatalogDestinations.Count дестинации
+                            </span>
+                        </div>
+
+                        <h4 class="fw-bold mb-2">@item.Name</h4>
+
+                        <p class="text-secondary small line-clamp-2 mb-4 flex-grow-1">
+                            @(string.IsNullOrWhiteSpace(item.Notes) ? "Няма добавени бележки към тази колекция." : item.Notes)
+                        </p>
+
+                        <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+                            <div class="small text-muted">
+                                <i class="bi bi-person-circle me-1"></i>
+                                @item.ApplicationUser?.FirstName @item.ApplicationUser?.LastName
+                            </div>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light rounded-pill px-3 fw-bold border">
+                                Разгледай
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .folder-card {
+        transition: 0.3s;
+        border-top: 4px solid #0d6efd !important;
+    }
+
+        .folder-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+
+    .folder-tab {
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        width: 60px;
+        height: 12px;
+        background-color: #0d6efd;
+        border-radius: 5px 5px 0 0;
+    }
+
+    .folder-icon-wrapper {
+        background: #f8f9fa;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.5rem;
+    }
+</style>

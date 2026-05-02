@@ -1,0 +1,104 @@
+﻿@model TravelMap.Models.Event
+
+@{
+    ViewData["Title"] = Model.Name;
+    var destinationImg = Url.Content(Model.Destination?.Images?.FirstOrDefault()?.ImageUrl ?? "~/images/destinations/default.jpg");
+}
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb text-uppercase small">
+            <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none">Събития</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div class="position-relative rounded-5 overflow-hidden shadow-lg" style="height: 450px;">
+                <img src="@destinationImg" class="w-100 h-100 object-fit-cover" alt="@Model.Name">
+                <div class="position-absolute bottom-0 start-0 w-100 p-4 bg-gradient-dark text-white">
+                    <h2 class="fw-bold mb-0">@Model.Name</h2>
+                    <p class="mb-0 opacity-75"><i class="bi bi-geo-alt me-2"></i>@Model.Destination?.Name</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="bg-white p-5 rounded-5 shadow-sm border h-100 d-flex flex-column">
+                <div class="mb-4">
+                    <span class="badge bg-light text-primary rounded-pill px-3 py-2 fw-bold border">
+                        <i class="bi bi-calendar-event me-2"></i>ДЕТАЙЛИ ЗА СЪБИТИЕТО
+                    </span>
+                </div>
+
+                <h3 class="fw-bold text-dark mb-4">Информация</h3>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-6">
+                        <label class="text-muted small fw-bold d-block text-uppercase">Дата</label>
+                        <p class="fs-5 fw-medium">@Model.Date.ToString("D")</p>
+                    </div>
+                    <div class="col-12">
+                        <label class="text-muted small fw-bold d-block text-uppercase">Описание</label>
+                        <p class="text-secondary lead">@Model.Description</p>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-4 border-top">
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Destinations" asp-action="Details" asp-route-id="@Model.DestinationId" class="btn btn-dark rounded-pill px-4 py-2 flex-grow-1 fw-bold">
+                            Към Дестинацията
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                            Назад
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-dark {
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+
+    .flashcard-hover {
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flashcard-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important;
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    .title-clamp {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 3rem;
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.5rem;
+    }
+
+    .glass-badge {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(5px);
+        color: #000;
+        border: 1px solid rgba(255,255,255,0.3);
+        font-weight: bold;
+    }
+</style>

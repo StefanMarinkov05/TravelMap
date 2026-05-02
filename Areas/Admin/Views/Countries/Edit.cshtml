@@ -1,0 +1,32 @@
+﻿@model TravelMap.Models.Country
+
+@{
+    ViewData["Title"] = "Редактирай Държава";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 rounded-4 p-4 p-lg-5">
+                <h2 class="fw-bold mb-4 text-center">Редактирай Държава</h2>
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group mb-4">
+                        <label asp-for="Name" class="form-label fw-bold small">Име</label>
+                        <input asp-for="Name" class="form-control rounded-pill px-3" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning rounded-pill py-2 fw-bold shadow-sm">Запази</button>
+                        <a asp-controller="DestinationSpecifications" asp-action="Index" class="btn btn-light rounded-pill py-2">Назад</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

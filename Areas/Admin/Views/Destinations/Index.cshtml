@@ -1,0 +1,145 @@
+﻿@model IEnumerable<TravelMap.Models.Destination>
+
+@{
+    ViewData["Title"] = "Управление на дестинации";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 rounded-4 shadow-sm border-start border-primary border-5">
+        <div>
+            <h1 class="fw-bold mb-0 text-dark">📍 Всички дестинации</h1>
+            <p class="text-muted mb-0">Пълен списък с метаданни и управление на съдържанието</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm">
+            <i class="bi bi-plus-lg me-2"></i>Добави нова
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 py-3">Дестинация & Снимки</th>
+                        <th class="py-3">@Html.DisplayNameFor(model => model.Author)</th>
+                        <th class="py-3">Тагове</th>
+                        <th class="py-3">Последно променен</th>
+                        <th class="py-3 text-center">@Html.DisplayNameFor(model => model.Popularity)</th>
+                        <th class="py-3 text-end pe-4">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="position-relative me-3">
+                                        @{
+                                            var firstImg = Url.Content(item.Images?.FirstOrDefault()?.ImageUrl ?? "~/images/destinations/default.jpg");
+                                        }
+                                        <img src="@firstImg" class="rounded-3 shadow-sm"
+                                             style="width: 60px; height: 60px; object-fit: cover;" alt="Thumbnail">
+
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info border border-light"
+                                              style="font-size: 0.65rem;" title="Брой снимки">
+                                            @item.ImageCount
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">@item.Name</div>
+                                        <div class="text-muted small">@item.Region, @item.Country?.Name</div>
+                                    </div>
+                                </div>
+
+                                <div class="text-primary" style="font-size: 0.75rem;">@item.Category?.Name</div>
+                            </td>
+
+                            <td>
+                                @if (item.Author != null)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person-circle me-2 text-secondary"></i>
+                                        <span class="small">@item.Author.FirstName @item.Author.LastName</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary fw-normal">Система</span>
+                                }
+                            </td>
+
+                            <td style="max-width: 200px;">
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach (var tag in item.Tags.Take(3))
+                                    {
+                                        <span class="badge border text-muted fw-normal" style="font-size: 0.7rem;">#@tag.Name</span>
+                                    }
+                                    @if (item.Tags.Count > 3)
+                                    {
+                                        <span class="text-muted small">+@(item.Tags.Count - 3)</span>
+                                    }
+                                </div>
+                            </td>
+
+                            <td class="small text-muted">
+                                @item.CreationDate.ToString("dd.MM.yyyy")
+                            </td>
+
+                            <td class="text-center">
+                                <div class="bg-light rounded-3 py-1">
+                                    <span class="fw-bold text-primary">@item.Popularity</span>
+                                    <i class="bi text-danger ms-1" style="font-size: 0.7rem;">каталога</i>
+                                </div>
+                            </td>
+
+                            <td class="text-end pe-4">
+                                <div class="btn-group shadow-sm rounded-pill overflow-hidden">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-white text-warning border-end" title="Редактирай">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-white text-primary border-end" title="Преглед">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-white text-danger" title="Изтрий">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-white {
+        background: white;
+        border: 1px solid #eee;
+    }
+
+        .btn-white:hover {
+            background: #f8f9fa;
+        }
+
+    .table thead th {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 800;
+        color: #8898aa;
+        background-color: #f6f9fc;
+        border: none;
+    }
+
+    .table tbody tr {
+        transition: transform 0.2s;
+    }
+
+        .table tbody tr:hover {
+            background-color: #fbfbfb;
+            transform: scale(1.002);
+        }
+</style>
